@@ -1,0 +1,1 @@
+browserify -r react -r react/addons -r -r material-ui> react-bundle.js
