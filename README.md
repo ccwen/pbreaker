@@ -1,6 +1,6 @@
 # pbreaker
 
-	enter to create new p break
-		name the paragraph
-		
-	backspace to remove a break
+	build-ksana
+	build-css
+	build-react
+	ks server
