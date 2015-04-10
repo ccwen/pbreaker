@@ -1,73 +1,49 @@
 var React=require("react");
-  mui = require('material-ui'),
-  RaisedButton = mui.RaisedButton,Tabs = mui.Tabs, Dialog=mui.Dialog, Menu=mui.Menu,Paper=mui.Paper
-  ,Snackbar=mui.Snackbar,TextField=mui.TextField,Toolbar=mui.Toolbar,ToolbarGroup=mui.ToolbarGroup,
-  DropDownMenu=mui.DropDownMenu,DropDownIcon=mui.DropDownIcon,FontIcon=mui.FontIcon;
-var Tab=require("./tab");
+var kse=require("ksana-search");
+var FlattenView = require('ksana-layer-react').FlattenView;
+var styles={
+  fontSize:"24px"
+}
+var E=React.createElement;
 
-var SvgIcon = mui.SvgIcon;
-var filterOptions = [
-  { payload: '1', text: 'All Broadcasts' },
-  { payload: '2', text: 'All Voice' },
-  { payload: '3', text: 'All Text' },
-  { payload: '4', text: 'Complete Voice' },
-  { payload: '5', text: 'Complete Text' },
-  { payload: '6', text: 'Active Voice' },
-  { payload: '7', text: 'Active Text' },
-];
-var iconMenuItems = [
-  { payload: '1', text: 'Download' },
-  { payload: '2', text: 'More Info' }
-];
-
-var maincomponent = React.createClass({
-  getInitialState:function() {
-    return {result:[],tofind:"君子"};
-  },
-  opendialog:function() {
-  	this.refs.snackbar.show();
+var markupStyles={
+  important:{color:"blue"}
+  ,hl0:{backgroundColor:"red",color:"yellow"}
+  ,hl1:{backgroundColor:"green",color:"yellow"}
+};
+var convertSearchResult=function(sr) {
+  console.log(sr)
+  return sr.excerpt.map(function(e){
+    var hits=e.realHits.map(function(hit){
+      return [hit[0],hit[1],{type:"hl"+hit[2]}];
+    });
+    return {text:e.text,hits:hits};
+  });
+}
+var MainComponent = React.createClass({
+  componentDidMount:function() {
+    var that=this;
+    kse.search("cbeta","優婆塞 比丘",{realPos:true,nohighlight:true,range:{start:0,maxfile:5}},function(err,result){
+      if (err)return;
+      that.setState({rows:convertSearchResult(result)});
+    });
   }
-  ,onChange:function(idx,tab){
-  	console.log(idx,tab);
+  ,getInitialState:function() {
+    return {rows:[],markups:[[1,3,{type:"warn"}],[2,3,{type:"important"}] ]}
+  }
+  ,onselect:function(start,len,thechar) {
+    console.log(start,len,thechar);
+  }
+  ,renderItem:function(item,idx) {
+      return <FlattenView key={idx} onSelect={this.onselect} text={item.text}
+         markups={item.hits} markupStyles={markupStyles}/>
   }
   ,render: function() {
-     return <div>
-     		<RaisedButton mini={true} onClick={this.opendialog}  tooltip="GitHub">open</RaisedButton>
-			<Tabs tabWidth={100} initialSelectedIndex={2} onchange={this.onChange}> 
-			  <Tab label="Item One" > 
-			    <div className="tab-template-container"> 
-			      <h2 className="mui-font-style-headline">Tab One Template Example</h2> 
-			      <p> 
-			        This is an example of a tab template! 
-			      </p> 
-			      <p> 
-			        You can put any sort of HTML or react component in here. 
-			      </p> 
-			    </div> 
-			  </Tab> 
-			  <Tab label="Item Two" > 
-			    <div className="tab-template-container"> 
-			      <h2 className="mui-font-style-headline">Tab Two Template Example</h2> 
-			      <p> 
-			        This is another example of a tab template! 
-			      </p> 
-			      <p> 
-			        Fair warning - the next tab routes to home! 
-			      </p> 
-			    </div> 
-			  </Tab> 
-			  <Tab 
-			    label="Item Three" 
-			    route="home"> 
-			    <h2>t3</h2>
-			   </Tab>
-			</Tabs> 
-      </div>
+     return <div style={styles}>
+        {this.state.rows.map(this.renderItem)}
+     	</div>
   }
 
-  ,_handleTouchTap:function() {
-  	console.log("tap")
-  }
 });
 
-module.exports=maincomponent;
+module.exports=MainComponent;
