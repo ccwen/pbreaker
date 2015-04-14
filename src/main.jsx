@@ -30,9 +30,27 @@ var Item=React.createClass({
   ,onselect:function(start,len,thechar) {
     console.log(this.props.index,start,len,thechar);
   }
+  ,createSampleMarkups:function() {
+    if (!this.props.text || this.props.text.length<10) return;
+    var markups=[];
+
+    for (var i=0;i<5;i++) {
+      var o={};
+      var start=Math.floor(Math.random()*(this.props.text.length));
+      var length=Math.floor(Math.random()*4+1);
+      if (start%2==0) {
+        o.before=React.createElement("button",{},"~");
+      } else {
+        o.after=React.createElement("button",{},".");
+      }
+      markups.push([start,length,o]);
+    }
+    return markups;
+  }
   //markups={item.hits}  markupStyles={markupStyles}
   ,render:function() {
-      return <MultiSelectView onSelect={this.onselect} text={(this.props.text||"")}/>
+      var markups=this.createSampleMarkups();
+      return <MultiSelectView showCaret={true} markups={markups} onSelect={this.onselect} text={(this.props.text||"")}/>
   }
 });
 
@@ -53,7 +71,7 @@ var MainComponent = React.createClass({
   ,moredata:function(now,cb) {
     var keys=[];;
     var t="";
-    for (var i=0;i<100;i++) {
+    for (var i=0;i<10;i++) {
       var fseg=this.state.db.absSegToFileSeg(now+i);
       keys.push(["filecontents",fseg.file,fseg.seg]);
     }
