@@ -3,7 +3,7 @@ var React=require("react/addons");
 var kse=require("ksana-search");
 var kde=require("ksana-database");
 
-var BaseView = require("ksana-layer-react").BaseView;
+var MultiSelectView = require("ksana-layer-react").MultiSelectView;
 var Infinite=require("ksana2015-components").infinite;
 var styles={
   fontSize:"24px"
@@ -32,7 +32,7 @@ var Item=React.createClass({
   }
   //markups={item.hits}  markupStyles={markupStyles}
   ,render:function() {
-      return <BaseView onSelect={this.onselect} text={(this.props.text||"")}/>
+      return <MultiSelectView onSelect={this.onselect} text={(this.props.text||"")}/>
   }
 });
 
