@@ -1,10 +1,10 @@
 var React=require("react/addons");
 
-var kse=require("ksana-search");
-var kde=require("ksana-database");
+//var kse=require("ksana-search");
+//var kde=require("ksana-database");
+//var Infinite=require("ksana2015-components").infinite;
+var TestMain=require("./testmain");
 
-var MultiSelectView = require("ksana-layer-react").MultiSelectView;
-var Infinite=require("ksana2015-components").infinite;
 var styles={
   fontSize:"24px"
 }
@@ -25,44 +25,23 @@ var convertSearchResult=function(sr) {
   });
 }
 
-var Item=React.createClass({
-  mixins: [React.addons.PureRenderMixin]
-  ,onselect:function(start,len,thechar) {
-    console.log(this.props.index,start,len,thechar);
-  }
-  ,createSampleMarkups:function() {
-    if (!this.props.text || this.props.text.length<10) return;
-    var markups=[];
-
-    for (var i=0;i<5;i++) {
-      var o={};
-      var start=Math.floor(Math.random()*(this.props.text.length));
-      var length=Math.floor(Math.random()*4+1);
-      if (start%2==0) {
-        o.before=React.createElement("button",{},"~");
-      } else {
-        o.after=React.createElement("button",{},".");
-      }
-      markups.push([start,length,o]);
-    }
-    return markups;
-  }
-  //markups={item.hits}  markupStyles={markupStyles}
-  ,render:function() {
-      var markups=this.createSampleMarkups();
-      return <MultiSelectView showCaret={true} markups={markups} onSelect={this.onselect} text={(this.props.text||"")}/>
+var MainComponent = React.createClass({
+  render:function() {
+    return <TestMain/>
   }
 });
-
+/*
 var MainComponent = React.createClass({
+
+  
   componentDidMount:function() {
-    /*
-    var that=this;
-    kse.search("cbeta","優婆塞 比丘",{realPos:true,nohighlight:true,range:{start:0,maxfile:5}},function(err,result){
-      if (err)return;
-      that.setState({rows:convertSearchResult(result)});
-    });
-*/
+    
+  //  var that=this;
+  //  kse.search("cbeta","優婆塞 比丘",{realPos:true,nohighlight:true,range:{start:0,maxfile:5}},function(err,result){
+  //    if (err)return;
+  //    that.setState({rows:convertSearchResult(result)});
+  //  });
+
     kde.open("cbeta",function(err,db){
       this.setState({db:db,moredata:this.moredata});
     },this);
@@ -82,10 +61,6 @@ var MainComponent = React.createClass({
   ,getInitialState:function() {
     return {rows:[],markups:[[1,3,{type:"warn"}],[2,3,{type:"important"}] ]}
   }
-
-  ,renderItem:function(item,idx) {
-
-  }
   ,render: function() {
      return <div className="infinite-example" style={styles}>
         <Infinite onLoad={this.state.moredata} itemClass={Item} height={500}/>
@@ -93,5 +68,5 @@ var MainComponent = React.createClass({
   }
 
 });
-
+*/
 module.exports=MainComponent;
